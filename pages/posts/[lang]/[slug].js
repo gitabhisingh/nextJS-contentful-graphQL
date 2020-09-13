@@ -1,18 +1,19 @@
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import ErrorPage from 'next/error'
-import Container from '../../components/container'
-import PostBody from '../../components/post-body'
-import MoreStories from '../../components/more-stories'
-import Header from '../../components/header'
-import PostHeader from '../../components/post-header'
-import SectionSeparator from '../../components/section-separator'
-import Layout from '../../components/layout'
-import { getAllPostsWithSlug, getPostAndMorePosts } from '../../lib/api'
-import PostTitle from '../../components/post-title'
-import { CMS_NAME } from '../../lib/constants'
+import Container from '../../../components/container'
+import PostBody from '../../../components/post-body'
+import MoreStories from '../../../components/more-stories'
+import Header from '../../../components/header'
+import PostHeader from '../../../components/post-header'
+import SectionSeparator from '../../../components/section-separator'
+import Layout from '../../../components/layout'
+import { getAllPostsWithSlug, getPostAndMorePosts } from '../../../lib/api'
+import PostTitle from '../../../components/post-title'
+import { CMS_NAME } from '../../../lib/constants'
 
 export default function Post({ post, morePosts, preview }) {
+  // console.log('Post props: ', post)
   const router = useRouter()
 
 
@@ -55,7 +56,8 @@ export default function Post({ post, morePosts, preview }) {
 }
 
 export async function getStaticProps({ params, preview = false }) {
-  const data = await getPostAndMorePosts(params.slug, preview)
+  console.log('static props: ', params)
+  const data = await getPostAndMorePosts(params.lang, params.slug, preview)
 
   return {
     props: {
@@ -67,9 +69,31 @@ export async function getStaticProps({ params, preview = false }) {
 }
 
 export async function getStaticPaths() {
-  const allPosts = await getAllPostsWithSlug()
+  const allPosts = await getAllPostsWithSlug();
+  const localeArr = ['en-US', 'fr-CA']
+  const pathArr = [];
+  allPosts.map((val) => {
+    localeArr.map((v) => {
+      pathArr.push({
+        params: {
+          slug: val.slug,
+          lang: v
+        }
+      })
+    })
+  });
+
+  console.log('XX', pathArr);
+
   return {
-    paths: allPosts?.map(({ slug }) => `/posts/${slug}`) ?? [],
+    // paths: allPosts?.map(({ slug }) => `/posts/lang/${slug}`) ?? [],
+    paths: pathArr ?? [],
+    // paths: [
+    //   { params: { slug: "everything-you-want-to-know", lang: "en-US" } },
+    //   { params: { slug: "everything-you-want-to-know", lang: "fr-CA" } },
+    //   { params: { slug: "lorem-ipsum", lang: "en-US" } },
+    //   { params: { slug: "lorem-ipsum", lang: "fr-CA" } }
+    // ],
     fallback: true,
   }
 }
