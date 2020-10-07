@@ -12,6 +12,8 @@ import { getAllPostsWithSlug, getPostAndMorePosts } from '../../../lib/api'
 import PostTitle from '../../../components/post-title'
 import { CMS_NAME } from '../../../lib/constants'
 
+import { Grid } from '@material-ui/core';
+
 export default function Post({ post, morePosts, preview }) {
   // console.log('Post props: ', post)
   const router = useRouter()
@@ -22,41 +24,16 @@ export default function Post({ post, morePosts, preview }) {
   }
 
   return (
-    <Layout preview={preview}>
-      <Container>
-        <Header />
-        {router.isFallback ? (
-          <PostTitle>Loading…</PostTitle>
-        ) : (
-            <>
-              <article>
-                <Head>
-                  <title>
-                    {post.title} | Next.js Blog Example with {CMS_NAME}
-                  </title>
-                  <meta property="og:image" content={post.coverImage.url} />
-                </Head>
-                <PostHeader
-                  title={post.title}
-                  coverImage={post.coverImage}
-                  date={post.date}
-                  author={post.author}
-                />
-                <PostBody content={post.content} />
-              </article>
-              <SectionSeparator />
-              {morePosts && morePosts.length > 0 && (
-                <MoreStories posts={morePosts} />
-              )}
-            </>
-          )}
-      </Container>
-    </Layout>
+    <Grid container>
+      <Grid item>
+
+      </Grid>
+    </Grid>
   )
 }
 
 export async function getStaticProps({ params, preview = false }) {
-  console.log('static props: ', params)
+  // console.log('static props: ', params)
   const data = await getPostAndMorePosts(params.lang, params.slug, preview)
 
   return {
@@ -83,17 +60,8 @@ export async function getStaticPaths() {
     })
   });
 
-  console.log('XX', pathArr);
-
   return {
-    // paths: allPosts?.map(({ slug }) => `/posts/lang/${slug}`) ?? [],
     paths: pathArr ?? [],
-    // paths: [
-    //   { params: { slug: "everything-you-want-to-know", lang: "en-US" } },
-    //   { params: { slug: "everything-you-want-to-know", lang: "fr-CA" } },
-    //   { params: { slug: "lorem-ipsum", lang: "en-US" } },
-    //   { params: { slug: "lorem-ipsum", lang: "fr-CA" } }
-    // ],
     fallback: true,
   }
 }
