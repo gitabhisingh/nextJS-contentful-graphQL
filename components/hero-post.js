@@ -1,7 +1,7 @@
-import Link from 'next/link'
-import Avatar from '../components/avatar'
-import DateComponent from '../components/date'
-import CoverImage from '../components/cover-image'
+import Link from "next/link";
+import Avatar from "../components/avatar";
+import DateComponent from "../components/date";
+import CoverImage from "../components/cover-image";
 
 export default function HeroPost({
   title,
@@ -19,7 +19,7 @@ export default function HeroPost({
       <div className="md:grid md:grid-cols-2 md:col-gap-16 lg:col-gap-8 mb-20 md:mb-28">
         <div>
           <h3 className="mb-4 text-4xl lg:text-6xl leading-tight">
-            <Link as={`/posts/en-US/${slug}`} href="/posts/[slug]">
+            <Link href={`/posts/en-US/${slug}`}>
               <a className="hover:underline">{title}</a>
             </Link>
           </h3>
@@ -33,5 +33,5 @@ export default function HeroPost({
         </div>
       </div>
     </section>
-  )
+  );
 }
